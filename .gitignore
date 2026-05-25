@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+
+# IDE
+.vscode/
+.idea/
+
+# Dataset / video privati
+data/
+outputs/
+
+# Modelli e pesi
+*.pt
+*.onnx
+*.engine
+*_openvino_model/
+
+# Log
+*.log
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Python package build metadata
+*.egg-info/
+src/*.egg-info/

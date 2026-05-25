@@ -1,0 +1,92 @@
+model:
+  path: "models/yolov8n.pt"
+  confidence: 0.50
+  iou: 0.5
+  device: null       # esempio: "cpu", "0" per GPU CUDA 0, null = automatico
+  imgsz: 416
+  tracker: "bytetrack.yaml"
+  enable_tracking: true
+
+  # Config dashcam: per ora escludiamo person per ridurre cartelli/persona.
+  # Riattiva person solo quando aggiungi un modello/dataset migliore o filtri pedoni più robusti.
+  target_classes:
+    - bicycle
+    - car
+    - motorcycle
+    - bus
+    - truck
+
+video:
+  source: 0
+  width: null
+  height: null
+  display: true
+  save_output: false
+  output_path: "outputs/adas_output.mp4"
+  log_every_n_frames: 15
+
+  # Performance: riduce il frame solo per YOLO, non per l'overlay finale.
+  inference_width: 736
+  inference_every_n_frames: 1
+
+lane:
+  roi_top_ratio: 0.55
+  roi_bottom_width_ratio: 0.96
+  roi_top_width_ratio: 0.28
+  canny_low: 60
+  canny_high: 160
+  hough_threshold: 45
+  min_line_length: 45
+  max_line_gap: 140
+  min_abs_slope: 0.38
+  max_abs_slope: 6.0
+  smoothing_frames: 6
+  use_color_mask: true
+
+  # Taratura dashcam. Se la camera non è perfettamente centrata, modifica 0.50.
+  vehicle_center_ratio: 0.50
+
+  # Più basso = segnala uscita corsia prima. 0.22 = 22% della larghezza corsia.
+  departure_offset_ratio: 0.22
+
+  # Corridoio centrale usato per collision risk. Più stretto = ignora meglio corsie accanto.
+  ego_path_width_ratio: 0.58
+
+risk:
+  warning_ttc_seconds: 2.0
+  brake_ttc_seconds: 0.9
+  min_area_growth_rate: 18.0
+  stale_track_seconds: 1.2
+  ego_lane_margin_ratio: 0.015
+  fallback_center_path_ratio: 0.18
+  require_lane_for_brake: true
+  require_lane_for_warning: false
+  use_ego_corridor: true
+  min_bottom_y_ratio: 0.45
+  min_area_ratio: 0.0015
+  max_person_aspect_ratio: 0.85
+  risk_classes:
+    - bicycle
+    - car
+    - motorcycle
+    - bus
+    - truck
+
+control:
+  simulate_brake_only: true
+  emergency_stop_latch_seconds: 0.7
+
+debug:
+  show_filtered: false
+
+dashboard:
+  enabled: true
+  compact: false
+  show_fps: true
+  show_debug_text: false
+  panel_alpha: 0.62
+  road_alpha: 0.22
+  ego_alpha: 0.26
+  glow: true
+  speed_kmh: null
+  speed_limit_kmh: null

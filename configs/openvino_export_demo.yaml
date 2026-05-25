@@ -1,0 +1,110 @@
+# Patch 7 - preset export demo offline con OpenVINO
+# Per pubblicare online: qualità visiva + detection frequente, anche se non realtime.
+model:
+  enabled: true
+  path: models/yolov8n_openvino_model
+  confidence: 0.36
+  iou: 0.50
+  imgsz: 416
+  device: intel:gpu
+  half: false
+  async_inference: false
+  enable_tracking: false
+  max_det: 14
+  target_classes: [bicycle, car, motorcycle, bus, truck]
+
+video:
+  source: data/dashcam1.mp4
+  display: false
+  save_output: true
+  output_path: outputs/adas_demo_openvino.mp4
+  display_width: null
+  inference_width: 640
+  inference_every_n_frames: 1
+  lane_every_n_frames: 1
+  target_display_fps: 60
+  opencv_threads: 1
+  log_every_n_frames: 180
+
+lane:
+  mode: "poly"
+  processing_width: 640
+  roi_top_ratio: 0.48
+  roi_bottom_width_ratio: 0.98
+  roi_top_width_ratio: 0.44
+  vehicle_center_ratio: 0.50
+  y_eval_ratio: 0.84
+  departure_y_eval_ratio: 0.93
+  departure_offset_ratio: 0.085
+  line_invasion_margin_ratio: 0.095
+  ego_path_width_ratio: 0.56
+  expected_lane_width_ratio: 0.55
+  lane_width_tolerance_ratio: 0.52
+  fallback_infer_missing_line: true
+  smoothing_frames: 7
+  curve_points: 52
+  white_v_min: 140
+  white_s_max: 125
+  yellow_h_low: 15
+  yellow_h_high: 42
+  yellow_s_min: 35
+  yellow_v_min: 70
+  sobel_threshold: 44
+  morph_kernel: 5
+  sliding_windows: 7
+  window_margin: 62
+  minpix: 26
+  min_lane_pixels: 120
+  histogram_y_min_ratio: 0.54
+  histogram_y_max_ratio: 0.95
+  dead_zone_ratio: 0.05
+
+risk:
+  warning_ttc_seconds: 1.8
+  brake_ttc_seconds: 0.75
+  min_area_growth_rate: 18.0
+  stale_track_seconds: 1.3
+  ego_lane_margin_ratio: 0.012
+  fallback_center_path_ratio: 0.22
+  require_lane_for_brake: true
+  require_lane_for_warning: false
+  use_ego_corridor: true
+  min_bottom_y_ratio: 0.40
+  min_area_ratio: 0.0008
+  enable_proximity_risk: true
+  proximity_warning_bottom_y_ratio: 0.62
+  proximity_brake_bottom_y_ratio: 0.92
+  proximity_warning_area_ratio: 0.006
+  proximity_brake_area_ratio: 0.070
+  proximity_warning_score: 0.38
+  proximity_brake_score: 0.86
+  match_max_center_dist_ratio: 0.20
+  match_min_iou: 0.06
+  risk_classes:
+    - bicycle
+    - car
+    - motorcycle
+    - bus
+    - truck
+
+control:
+  simulate_brake_only: true
+  emergency_stop_latch_seconds: 0.6
+
+dashboard:
+  enabled: true
+  render_mode: premium
+  compact: false
+  show_fps: false
+  show_debug_text: false
+  panel_alpha: 0.58
+  road_alpha: 0.18
+  ego_alpha: 0.23
+  glow: true
+  vignette: true
+  micro_grid: false
+  speed_kmh: null
+  speed_limit_kmh: null
+
+debug:
+  show_filtered: false

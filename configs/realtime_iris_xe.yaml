@@ -1,0 +1,122 @@
+# Patch 7 - Intel Iris Xe / OpenVINO live preset
+# Prima esporta il modello:
+#   python scripts/export_openvino.py --model models/yolov8n.pt --half --imgsz 320
+# Poi lancia:
+#   python -m adas.main --config configs/realtime_iris_xe.yaml --source data/dashcam1.mp4 --lite-ui
+
+model:
+  enabled: true
+  path: models/yolov8n_openvino_model
+  confidence: 0.38
+  iou: 0.50
+  imgsz: 320
+  device: intel:gpu
+  half: false
+  async_inference: true
+  enable_tracking: false
+  tracker: bytetrack.yaml
+  max_det: 12
+  target_classes:
+    - bicycle
+    - car
+    - motorcycle
+    - bus
+    - truck
+
+video:
+  source: 0
+  display: true
+  save_output: false
+  output_path: outputs/adas_iris_xe_demo.mp4
+  width: null
+  height: null
+  display_width: 1280
+  inference_width: 416
+  inference_every_n_frames: 2
+  lane_every_n_frames: 2
+  target_display_fps: 60
+  opencv_threads: 1
+  log_every_n_frames: 120
+
+lane:
+  mode: "poly"
+  processing_width: 416
+  roi_top_ratio: 0.48
+  roi_bottom_width_ratio: 0.98
+  roi_top_width_ratio: 0.44
+  vehicle_center_ratio: 0.50
+  y_eval_ratio: 0.84
+  departure_y_eval_ratio: 0.93
+  departure_offset_ratio: 0.085
+  line_invasion_margin_ratio: 0.095
+  ego_path_width_ratio: 0.56
+  expected_lane_width_ratio: 0.55
+  lane_width_tolerance_ratio: 0.52
+  fallback_infer_missing_line: true
+  smoothing_frames: 7
+  curve_points: 30
+  white_v_min: 140
+  white_s_max: 125
+  yellow_h_low: 15
+  yellow_h_high: 42
+  yellow_s_min: 35
+  yellow_v_min: 70
+  sobel_threshold: 44
+  morph_kernel: 5
+  sliding_windows: 7
+  window_margin: 62
+  minpix: 26
+  min_lane_pixels: 120
+  histogram_y_min_ratio: 0.54
+  histogram_y_max_ratio: 0.95
+  dead_zone_ratio: 0.05
+
+risk:
+  warning_ttc_seconds: 1.8
+  brake_ttc_seconds: 0.75
+  min_area_growth_rate: 18.0
+  stale_track_seconds: 1.3
+  ego_lane_margin_ratio: 0.012
+  fallback_center_path_ratio: 0.22
+  require_lane_for_brake: true
+  require_lane_for_warning: false
+  use_ego_corridor: true
+  min_bottom_y_ratio: 0.40
+  min_area_ratio: 0.0008
+  enable_proximity_risk: true
+  proximity_warning_bottom_y_ratio: 0.62
+  proximity_brake_bottom_y_ratio: 0.92
+  proximity_warning_area_ratio: 0.006
+  proximity_brake_area_ratio: 0.070
+  proximity_warning_score: 0.38
+  proximity_brake_score: 0.86
+  match_max_center_dist_ratio: 0.20
+  match_min_iou: 0.06
+  risk_classes:
+    - bicycle
+    - car
+    - motorcycle
+    - bus
+    - truck
+
+control:
+  simulate_brake_only: true
+  emergency_stop_latch_seconds: 0.6
+
+dashboard:
+  enabled: true
+  render_mode: performance
+  compact: true
+  show_fps: true
+  show_debug_text: false
+  panel_alpha: 0.50
+  road_alpha: 0.14
+  ego_alpha: 0.20
+  glow: false
+  vignette: false
+  micro_grid: false
+  speed_kmh: null
+  speed_limit_kmh: null
+
+debug:
+  show_filtered: false
